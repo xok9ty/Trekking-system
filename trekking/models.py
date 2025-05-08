@@ -44,3 +44,18 @@ class Task(models.Model):
         if self.deadline:
             return timezone.now() > self.deadline
         return False
+    
+class Comment(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='comments', verbose_name='Завдання')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
+    text = models.TextField(verbose_name='Текст коментаря')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата створення')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата оновлення')
+    
+    class Meta:
+        verbose_name = 'Коментар'
+        verbose_name_plural = 'Коментарі'
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f'Коментар від {self.author} до {self.task}'
