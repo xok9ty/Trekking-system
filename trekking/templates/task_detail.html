@@ -1,0 +1,6 @@
+<h1>{{ task.title }}</h1>
+<p>Опис: {{ task.description }}</p>
+<p>Статус: {{ task.get_status_display }}</p>
+<p>Пріоритет: {{ task.get_priority_display }}</p>
+<p>Дедлайн: {{ task.deadline }}</p>
+<a href="{% url 'tasks:task-list' %}">Назад до списку</a>
