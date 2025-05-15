@@ -1,0 +1,9 @@
+<h1>Список завдань</h1>
+<ul>
+    {% for task in tasks %}
+        <li>
+            <a href="">{{ task.title }}</a>
+        </li>
+    {% endfor %}
+</ul>
+<a href="">Створити нове завдання</a>

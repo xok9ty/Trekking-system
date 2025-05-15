@@ -46,8 +46,8 @@ class Task(models.Model):
 #        return False
     
 class Comment(models.Model):
-    task = models.ForeignKey(Task, on_delete=models.SET_NULL, related_name='comments', verbose_name='Завдання')
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, verbose_name='Автор')
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='comments', verbose_name='Завдання')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     text = models.TextField(verbose_name='Текст коментаря')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата створення')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата оновлення')
