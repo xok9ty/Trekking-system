@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from .models import Task
+from .models import Task, Comment
 from django.views.generic import ListView, DetailView, CreateView
-from django.urls import reverse_lazy
-from .forms import TaskForm
+from django.urls import reverse_lazy, reverse
+from .forms import TaskForm, CommentForm
 
 # Create your views here.
 class TaskListView(ListView):
@@ -30,3 +30,16 @@ class TaskCreateView(CreateView):
     def form_valid(self, form):
         form.instance.creator = self.request.user
         return super().form_valid(form)
+    
+class CommentCreateView(CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'trekking/task_detail.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.task_id = self.kwargs['pk']
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('tasks:task-detail', kwargs={'pk': self.kwargs['pk']})

@@ -3,19 +3,23 @@
 <p>Статус: {{ task.get_status_display }}</p>
 <p>Пріоритет: {{ task.get_priority_display }}</p>
 <p>Дедлайн: {{ task.deadline }}</p>
-<h2>Коментарі ({{ comments.count }})</h2>
-{% if comments %}
-    <ul>
-    {% for comment in comments %}
-        <li>
-            <strong>{{ comment.author.username }}</strong> 
-            {{ comment.created_at|date:"Y-m-d H:i" }}
-            <p>{{ comment.text }}</p>
-        </li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>Ще немає коментарів</p>
-{% endif %}
+<h2>Коментарі</h2>
+
+{% for comment in comments %}
+<div class="comment">
+    <strong>{{ comment.author.username }}</strong>
+    <small>{{ comment.created_at|date:"Y-m-d H:i" }}</small>
+    <p>{{ comment.text }}</p>
+</div>
+{% empty %}
+<p>Ще немає коментарів</p>
+{% endfor %}
+
+<h3>Додати коментар</h3>
+<form method="post" action="{% url 'tasks:comment-create' task.pk %}">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <button type="submit" class="btn btn-primary">Відправити</button>
+</form>
 
 <a href="{% url 'tasks:task-list' %}">Назад до списку</a>
