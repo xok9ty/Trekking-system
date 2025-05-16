@@ -1,25 +1,65 @@
-<h1>{{ task.title }}</h1>
-<p>Опис: {{ task.description }}</p>
-<p>Статус: {{ task.get_status_display }}</p>
-<p>Пріоритет: {{ task.get_priority_display }}</p>
-<p>Дедлайн: {{ task.deadline }}</p>
-<h2>Коментарі</h2>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ task.title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h1 class="h4">{{ task.title }}</h1>
+            </div>
+            <div class="card-body">
+                <p class="card-text"><strong>Опис:</strong> {{ task.description }}</p>
+                <p class="card-text"><strong>Статус:</strong> <span class="badge bg-secondary">{{ task.get_status_display }}</span></p>
+                <p class="card-text"><strong>Пріоритет:</strong> <span class="badge bg-warning text-dark">{{ task.get_priority_display }}</span></p>
+                <p class="card-text"><strong>Дедлайн:</strong> {{ task.deadline }}</p>
+            </div>
+        </div>
 
-{% for comment in comments %}
-<div class="comment">
-    <strong>{{ comment.author.username }}</strong>
-    <small>{{ comment.created_at|date:"Y-m-d H:i" }}</small>
-    <p>{{ comment.text }}</p>
-</div>
-{% empty %}
-<p>Ще немає коментарів</p>
-{% endfor %}
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h2 class="h5 mb-0">Коментарі</h2>
+            </div>
+            <div class="card-body">
+                {% for comment in comments %}
+                <div class="comment mb-3 pb-3 border-bottom">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <strong class="text-primary">{{ comment.author.username }}</strong>
+                        <small class="text-muted">{{ comment.created_at|date:"Y-m-d H:i" }}</small>
+                    </div>
+                    <p class="mb-0">{{ comment.text }}</p>
+                </div>
+                {% empty %}
+                <p class="text-muted">Ще немає коментарів</p>
+                {% endfor %}
+            </div>
+        </div>
 
-<h3>Додати коментар</h3>
-<form method="post" action="{% url 'tasks:comment-create' task.pk %}">
-    {% csrf_token %}
-    {{ comment_form.as_p }}
-    <button type="submit" class="btn btn-primary">Відправити</button>
-</form>
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h3 class="h5 mb-0">Додати коментар</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'tasks:comment-create' task.pk %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{ comment_form.text.label_tag }}
+                        {{ comment_form.text }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Відправити</button>
+                </form>
+            </div>
+        </div>
 
-<a href="{% url 'tasks:task-list' %}">Назад до списку</a>
+        <div class="mt-4">
+            <a href="{% url 'tasks:task-list' %}" class="btn btn-outline-secondary">Назад до списку</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
