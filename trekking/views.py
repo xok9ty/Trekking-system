@@ -19,6 +19,7 @@ class TaskDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comments'] = self.object.comments.all().order_by('-created_at')
+        context['comment_form'] = CommentForm() 
         return context
     
 class TaskCreateView(CreateView):
@@ -34,7 +35,7 @@ class TaskCreateView(CreateView):
 class CommentCreateView(CreateView):
     model = Comment
     form_class = CommentForm
-    template_name = 'trekking/task_detail.html'
+    template_name = 'task_detail.html'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
