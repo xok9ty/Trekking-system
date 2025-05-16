@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from .models import Task, Comment
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.urls import reverse_lazy, reverse
 from .forms import TaskForm, CommentForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 class TaskListView(ListView):
@@ -44,3 +45,17 @@ class CommentCreateView(CreateView):
 
     def get_success_url(self):
         return reverse('tasks:task-detail', kwargs={'pk': self.kwargs['pk']})
+    
+
+class TaskUpdateView(LoginRequiredMixin, UpdateView):
+    model = Task
+    form_class = TaskForm
+    template_name = 'task_form.html'
+    success_url = reverse_lazy('tasks:task-list')
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(creator=self.request.user)
+    
+    def form_valid(self, form):
+        form.instance.updated_by = self.request.user
+        return super().form_valid(form)
