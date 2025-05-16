@@ -15,6 +15,11 @@ class TaskDetailView(DetailView):
     model = Task
     template_name = 'task_detail.html'
     context_object_name = 'task'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comments'] = self.object.comments.all().order_by('-created_at')
+        return context
     
 class TaskCreateView(CreateView):
     model = Task

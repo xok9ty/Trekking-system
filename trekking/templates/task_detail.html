@@ -3,4 +3,19 @@
 <p>Статус: {{ task.get_status_display }}</p>
 <p>Пріоритет: {{ task.get_priority_display }}</p>
 <p>Дедлайн: {{ task.deadline }}</p>
+<h2>Коментарі ({{ comments.count }})</h2>
+{% if comments %}
+    <ul>
+    {% for comment in comments %}
+        <li>
+            <strong>{{ comment.author.username }}</strong> 
+            {{ comment.created_at|date:"Y-m-d H:i" }}
+            <p>{{ comment.text }}</p>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Ще немає коментарів</p>
+{% endif %}
+
 <a href="{% url 'tasks:task-list' %}">Назад до списку</a>
