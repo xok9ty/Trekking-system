@@ -56,9 +56,11 @@
         </div>
 
         <div class="mt-4">
-            <a href="{% url 'tasks:task-list' %}" class="btn btn-outline-secondary">Назад до списку</a>
-            <a href="{% url 'tasks:task-update' task.pk %}" class="btn btn-outline-primary">Редагувати</a>
-            <a href="{% url 'tasks:task-delete' task.pk %}" class="btn btn-outline-danger">Видалити</a>
+           <a href="{% url 'tasks:task-list' %}" class="btn btn-outline-secondary">Назад до списку</a>
+           {% if request.user == task.creator %}
+               <a href="{% url 'tasks:task-update' task.pk %}" class="btn btn-outline-primary">Редагувати</a>
+               <a href="{% url 'tasks:task-delete' task.pk %}" class="btn btn-outline-danger">Видалити</a>
+           {% endif %}
         </div>
     </div>
 
