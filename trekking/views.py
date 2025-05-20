@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Task, Comment
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from .forms import TaskForm, CommentForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -59,3 +59,11 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         form.instance.updated_by = self.request.user
         return super().form_valid(form)
+    
+class TaskDeleteView(LoginRequiredMixin, DeleteView):
+    model = Task
+    template_name = 'task_confirm_delete.html'
+    success_url = reverse_lazy('tasks:task-list')
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(creator=self.request.user)
