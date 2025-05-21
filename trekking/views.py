@@ -76,9 +76,12 @@ class TaskListView(ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         status = self.request.GET.get('status')
+        priority = self.request.GET.get('priority')
         
         if status:
             queryset = queryset.filter(status=status)
+        if priority:
+            queryset = queryset.filter(priority=priority)
             
         return queryset
     
