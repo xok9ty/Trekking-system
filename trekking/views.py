@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .models import Task, Comment
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
-from .forms import TaskForm, CommentForm
+from .forms import TaskForm, CommentForm, TaskFilterForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
@@ -67,3 +67,22 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
     
     def get_queryset(self):
         return super().get_queryset().filter(creator=self.request.user)
+    
+class TaskListView(ListView):
+    model = Task
+    template_name = 'task_list.html'
+    context_object_name = 'tasks'
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        status = self.request.GET.get('status')
+        
+        if status:
+            queryset = queryset.filter(status=status)
+            
+        return queryset
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter_form'] = TaskFilterForm(self.request.GET or None)
+        return context

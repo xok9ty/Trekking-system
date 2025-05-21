@@ -36,3 +36,32 @@ class CommentForm(forms.ModelForm):
                 'placeholder': 'Напишіть ваш коментар тут...'
             }),
         }
+
+class TaskFilterForm(forms.Form):
+    STATUS_CHOICES = [
+        ('', 'Усі статуси'),
+        ('new', 'Нове'),
+        ('in_progress', 'В роботі'),
+        ('completed', 'Завершене'),
+        ('archived', 'Архівоване'),
+    ]
+    
+    PRIORITY_CHOICES = [
+        ('', 'Усі пріоритети'),
+        (1, 'Низький'),
+        (2, 'Середній'),
+        (3, 'Високий'),
+        (4, 'Критичний'),
+    ]
+    
+    status = forms.ChoiceField(
+        choices=STATUS_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-select form-select-sm'})
+    )
+    
+    priority = forms.ChoiceField(
+        choices=PRIORITY_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-select form-select-sm'})
+    )
