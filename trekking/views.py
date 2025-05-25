@@ -89,3 +89,13 @@ class TaskListView(ListView):
         context = super().get_context_data(**kwargs)
         context['filter_form'] = TaskFilterForm(self.request.GET or None)
         return context
+
+class CommentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Comment
+    template_name = 'comment_confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse('tasks:task-detail', kwargs={'pk': self.object.task.id})
+
+    def get_queryset(self):
+        return super().get_queryset().filter(author=self.request.user)
