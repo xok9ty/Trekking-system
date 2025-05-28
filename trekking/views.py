@@ -99,3 +99,27 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_queryset(self):
         return super().get_queryset().filter(author=self.request.user)
+    
+class CommentUpdateView(LoginRequiredMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'comment_form.html'
+
+    def get_success_url(self):
+        return reverse('tasks:task-detail', kwargs={'pk': self.object.task.id})
+
+    def get_queryset(self):
+        return super().get_queryset().filter(author=self.request.user)
+    
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'task_detail.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.task_id = self.kwargs['pk']
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('tasks:task-detail', kwargs={'pk': self.kwargs['pk']})
